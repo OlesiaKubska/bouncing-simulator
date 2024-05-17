@@ -1,0 +1,22 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+}
+
+.board div {
+  display: contents;
+}
+
+.board span {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  border: 1px solid #000;
+}
+
+.ball {
+  background-color: red;
+  color: #fff;
+}
