@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-bouncy-simulator',
@@ -12,21 +12,33 @@ export class BouncySimulatorComponent implements OnInit {
   board: string[][];
   ballPosition: { x: number; y: number };
   direction: { x: number; y: number };
+  intervalId: number | undefined;
+  isBrowser: boolean;
+  moveCount: number;
 
-  ExampleInput = [
+  ExampleInput: string[][] = [
     ['Y', '0', 'X'],
     ['0', '1', '0'],
     ['X', '0', 'Y'],
   ];
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    console.log('BouncySimulatorComponent constructed');
     this.board = this.ExampleInput;
+    console.log('Board:', JSON.stringify(this.board));
     this.ballPosition = this.getInitialBallPosition();
+    console.log('Initial Ball Position:', JSON.stringify(this.ballPosition));
     this.direction = this.getRandomDirection();
+    console.log('Initial Direction:', JSON.stringify(this.direction));
+    this.moveCount = 0;
   }
 
   ngOnInit(): void {
-    this.startSimulation();
+    console.log('BouncySimulatorComponent initialized');
+    if (this.isBrowser) {
+      this.startSimulation();
+    }
   }
 
   getInitialBallPosition() {
@@ -50,24 +62,40 @@ export class BouncySimulatorComponent implements OnInit {
   }
 
   startSimulation() {
-    setInterval(() => this.moveBall(), 500);
+    console.log('Starting simulation');
+    this.intervalId = window.setInterval(() => this.moveBall(), 500);
   }
 
   moveBall() {
+    console.log('Moving ball');
     let newX = this.ballPosition.x + this.direction.x;
     let newY = this.ballPosition.y + this.direction.y;
 
     if (this.isWithinBounds(newX, newY)) {
       if (this.board[newX][newY] === 'X') {
-        this.changeDirection();
+        console.log('Hit X, changing direction');
+        this.changeDirection(true);
       } else if (this.board[newX][newY] === 'Y') {
+        console.log('Hit Y, changing direction and turning Y into 0');
         this.board[newX][newY] = '0';
-        this.changeDirection();
+        this.changeDirection(false);
+      } else {
+        this.ballPosition.x = newX;
+        this.ballPosition.y = newY;
+        console.log('Ball moved to:', JSON.stringify(this.ballPosition));
       }
-      this.ballPosition.x = newX;
-      this.ballPosition.y = newY;
     } else {
-      this.changeDirection();
+      console.log('Out of bounds, changing direction');
+      this.changeDirection(false);
+    }
+
+    // Increment move count and check for infinite loop
+    this.moveCount++;
+    if (this.moveCount > 100) {
+      console.log('Too many moves, stopping the ball to prevent infinite loop');
+      if (this.intervalId !== undefined) {
+        clearInterval(this.intervalId);
+      }
     }
   }
 
@@ -77,13 +105,55 @@ export class BouncySimulatorComponent implements OnInit {
     );
   }
 
-  changeDirection() {
+  changeDirection(hitX: boolean) {
     const previousDirection = this.direction;
-    do {
-      this.direction = this.getRandomDirection();
-    } while (
-      this.direction.x === -previousDirection.x &&
-      this.direction.y === -previousDirection.y
-    );
+    const directions = [
+      { x: 0, y: 1 },
+      { x: 1, y: 0 },
+      { x: 0, y: -1 },
+      { x: -1, y: 0 },
+    ];
+
+    // Shuffle the directions array to add randomness
+    for (let i = directions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [directions[i], directions[j]] = [directions[j], directions[i]];
+    }
+
+    let newDirectionFound = false;
+    let attempts = 0;
+
+    for (let newDirection of directions) {
+      const newX = this.ballPosition.x + newDirection.x;
+      const newY = this.ballPosition.y + newDirection.y;
+
+      if (
+        newDirection.x !== -previousDirection.x &&
+        newDirection.y !== -previousDirection.y &&
+        this.isWithinBounds(newX, newY) &&
+        (!hitX || this.board[newX][newY] !== 'X')
+      ) {
+        this.direction = newDirection;
+        newDirectionFound = true;
+        console.log('Direction changed to:', JSON.stringify(this.direction));
+        break;
+      }
+
+      attempts++;
+      if (attempts > 10) {
+        console.log('Too many attempts to change direction, stopping the ball');
+        if (this.intervalId !== undefined) {
+          clearInterval(this.intervalId);
+        }
+        return;
+      }
+    }
+
+    if (!newDirectionFound) {
+      console.log('No valid direction found, stopping the ball');
+      if (this.intervalId !== undefined) {
+        clearInterval(this.intervalId);
+      }
+    }
   }
 }
