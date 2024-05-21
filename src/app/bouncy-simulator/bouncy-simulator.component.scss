@@ -1,6 +1,18 @@
+.board-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+  background-color: #fff;
+  border: 2px solid blue;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .board div {
@@ -9,11 +21,11 @@
 
 .board span {
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   text-align: center;
   line-height: 20px;
-  border: 1px solid #000;
+  border: 1px solid blue;
 }
 
 .ball {

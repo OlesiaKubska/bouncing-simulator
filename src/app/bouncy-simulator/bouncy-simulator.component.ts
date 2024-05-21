@@ -1,5 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { ExampleInput } from './ExampleInput';
 
 @Component({
   selector: 'app-bouncy-simulator',
@@ -16,16 +17,10 @@ export class BouncySimulatorComponent implements OnInit {
   isBrowser: boolean;
   moveCount: number;
 
-  ExampleInput: string[][] = [
-    ['Y', '0', 'X'],
-    ['0', '1', '0'],
-    ['X', '0', 'Y'],
-  ];
-
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     console.log('BouncySimulatorComponent constructed');
-    this.board = this.ExampleInput;
+    this.board = ExampleInput;
     console.log('Board:', JSON.stringify(this.board));
     this.ballPosition = this.getInitialBallPosition();
     console.log('Initial Ball Position:', JSON.stringify(this.ballPosition));
