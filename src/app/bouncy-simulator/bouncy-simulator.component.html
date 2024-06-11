@@ -1,9 +1,12 @@
 <div class="board-container">
   <div class="board">
-    <div *ngFor="let row of board; let i = index">
+    <div *ngFor="let row of board; let i = index" class="row">
       <span
         *ngFor="let cell of row; let j = index"
         [class.ball]="i === ballPosition.x && j === ballPosition.y"
+        [class.y-cell]="cell === 'Y'"
+        [class.x-cell]="cell === 'X'"
+        [class.o-cell]="cell === '0'"
       >
         {{ cell }}
       </span>

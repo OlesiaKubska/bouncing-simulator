@@ -8,27 +8,42 @@
 
 .board {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+  grid-template-rows: repeat(16, 30px);
+  grid-template-columns: repeat(12, 30px);
+  grid-gap: 10px;
   background-color: #fff;
   border: 2px solid blue;
   padding: 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.board div {
+.row {
   display: contents;
 }
 
-.board span {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  line-height: 20px;
+.row span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
   border: 1px solid blue;
+  box-sizing: border-box;
 }
 
 .ball {
   background-color: red;
   color: #fff;
+}
+
+.y-cell {
+  background-color: yellow;
+}
+
+.x-cell {
+  background-color: #90ee90;
+}
+
+.o-cell {
+  background-color: orange;
 }

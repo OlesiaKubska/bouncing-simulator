@@ -19,41 +19,33 @@ export class BouncySimulatorComponent implements OnInit {
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
-    console.log('BouncySimulatorComponent constructed');
+    // console.log('BouncySimulatorComponent constructed');
     this.board = ExampleInput;
-    console.log('Board:', JSON.stringify(this.board));
+    // console.log('Board:', JSON.stringify(this.board));
     this.ballPosition = this.getInitialBallPosition();
-    console.log('Initial Ball Position:', JSON.stringify(this.ballPosition));
-    this.direction = this.getRandomDirection();
+    // console.log('Initial Ball Position:', JSON.stringify(this.ballPosition));
+    this.direction = { x: 1, y: 1 };
     console.log('Initial Direction:', JSON.stringify(this.direction));
     this.moveCount = 0;
   }
 
   ngOnInit(): void {
-    console.log('BouncySimulatorComponent initialized');
+    // console.log('BouncySimulatorComponent initialized');
     if (this.isBrowser) {
       this.startSimulation();
     }
   }
 
   getInitialBallPosition() {
-    const corners = [
-      { x: 0, y: 0 },
-      { x: 0, y: this.board[0].length - 1 },
-      { x: this.board.length - 1, y: 0 },
-      { x: this.board.length - 1, y: this.board[0].length - 1 },
-    ];
-    return corners[Math.floor(Math.random() * corners.length)];
-  }
+    for (let i = 0; i < this.board.length; i++) {
+      for (let j = 0; j < this.board[i].length; j++) {
+        if (this.board[i][j] === '1') {
+          return { x: i, y: j };
+        }
+      }
+    }
 
-  getRandomDirection() {
-    const directions = [
-      { x: 0, y: 1 },
-      { x: 1, y: 0 },
-      { x: 0, y: -1 },
-      { x: -1, y: 0 },
-    ];
-    return directions[Math.floor(Math.random() * directions.length)];
+    return { x: 0, y: 0 };
   }
 
   startSimulation() {
@@ -84,7 +76,6 @@ export class BouncySimulatorComponent implements OnInit {
       this.changeDirection(false);
     }
 
-    // Increment move count and check for infinite loop
     this.moveCount++;
     if (this.moveCount > 100) {
       console.log('Too many moves, stopping the ball to prevent infinite loop');
@@ -103,20 +94,18 @@ export class BouncySimulatorComponent implements OnInit {
   changeDirection(hitX: boolean) {
     const previousDirection = this.direction;
     const directions = [
-      { x: 0, y: 1 },
-      { x: 1, y: 0 },
-      { x: 0, y: -1 },
-      { x: -1, y: 0 },
+      { x: 1, y: 1 },
+      { x: 1, y: -1 },
+      { x: -1, y: 1 },
+      { x: -1, y: -1 },
     ];
 
-    // Shuffle the directions array to add randomness
     for (let i = directions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [directions[i], directions[j]] = [directions[j], directions[i]];
     }
 
     let newDirectionFound = false;
-    let attempts = 0;
 
     for (let newDirection of directions) {
       const newX = this.ballPosition.x + newDirection.x;
@@ -130,25 +119,25 @@ export class BouncySimulatorComponent implements OnInit {
       ) {
         this.direction = newDirection;
         newDirectionFound = true;
-        console.log('Direction changed to:', JSON.stringify(this.direction));
         break;
-      }
-
-      attempts++;
-      if (attempts > 10) {
-        console.log('Too many attempts to change direction, stopping the ball');
-        if (this.intervalId !== undefined) {
-          clearInterval(this.intervalId);
-        }
-        return;
       }
     }
 
     if (!newDirectionFound) {
-      console.log('No valid direction found, stopping the ball');
-      if (this.intervalId !== undefined) {
-        clearInterval(this.intervalId);
+      for (let newDirection of directions) {
+        const newX = this.ballPosition.x + newDirection.x;
+        const newY = this.ballPosition.y + newDirection.y;
+
+        if (this.isWithinBounds(newX, newY)) {
+          this.direction = newDirection;
+          newDirectionFound = true;
+          break;
+        }
       }
+    }
+
+    if (!newDirectionFound && this.intervalId !== undefined) {
+      clearInterval(this.intervalId);
     }
   }
 }
