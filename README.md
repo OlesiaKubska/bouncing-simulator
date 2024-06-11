@@ -1,27 +1,54 @@
-# BouncySimulatorProject
+# Bouncing Simulator
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
+A bouncingl simulator implemented in Angular. The ball moves diagonally across a grid, bouncing off walls and changing direction upon hitting certain obstacles.
 
-## Development server
+## Features
+- The ball starts from a position marked with '1' and moves diagonally.
+- When the ball hits a 'Y', it changes direction randomly and 'Y' turns into '0'.
+- The ball bounces off walls ('X') and changes direction.
+- The board configuration can vary, and the ball adjusts accordingly.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Getting Started
 
-## Code scaffolding
+### Prerequisites
+- Node.js (>= 12.x)
+- Angular CLI (>= 12.x)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Installation
 
-## Build
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/OlesiaKubska/bouncing-simulator.git
+    cd bouncing-simulator
+    ```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-## Running unit tests
+### Running the Application
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. Start the development server:
+    ```bash
+    ng serve
+    ```
 
-## Running end-to-end tests
+2. Open your browser and navigate to:
+    ```
+    http://localhost:4200
+    ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Usage
 
-## Further help
+1. The ball starts at a corner position marked with '1'.
+2. It moves diagonally and interacts with obstacles ('X' and 'Y') as per the defined logic.
+3. The simulation can be observed in the browser.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+- Inspired by classic bouncy ball simulations and grid-based games.
