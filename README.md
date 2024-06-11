@@ -1,6 +1,6 @@
 # Bouncing Simulator
 
-A bouncingl simulator implemented in Angular. The ball moves diagonally across a grid, bouncing off walls and changing direction upon hitting certain obstacles.
+A bouncing simulator implemented in Angular. The ball moves diagonally across a grid, bouncing off walls and changing direction upon hitting certain obstacles.
 
 ## Features
 - The ball starts from a position marked with '1' and moves diagonally.
