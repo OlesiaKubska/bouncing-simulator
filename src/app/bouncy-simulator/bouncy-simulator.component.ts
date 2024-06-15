@@ -67,9 +67,17 @@ export class BouncySimulatorComponent implements OnInit {
         this.board[newX][newY] = '0';
         this.changeDirection(false);
       } else {
+        // Zmiana poprzedniej pozycji na '0'
+        this.board[this.ballPosition.x][this.ballPosition.y] = '0';
+        // Aktualizacja pozycji piłki
         this.ballPosition.x = newX;
         this.ballPosition.y = newY;
+        // Ustawienie nowej pozycji na '1'
+        this.board[this.ballPosition.x][this.ballPosition.y] = '1';
         console.log('Ball moved to:', JSON.stringify(this.ballPosition));
+        // this.ballPosition.x = newX;
+        // this.ballPosition.y = newY;
+        // console.log('Ball moved to:', JSON.stringify(this.ballPosition));
       }
     } else {
       console.log('Out of bounds, changing direction');
